@@ -20,31 +20,30 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Specify version 14 or any version >= 14
+          node-version: '14.x' # Use the Node.js version you want
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Get changed files
-        id: changed-files
-        run: echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
-
-      - name: ESLint check
+      - name: Redirect standard input to a temporary file
+        id: temp-file
         run: |
-          changed_files="${{ steps.changed-files.outputs.files }}"
-          if [ -n "$changed_files" ]; then
+          temp_file=$(mktemp)
+          git diff --name-only --cached > "$temp_file"
+          echo "::set-output name=temp-file-path::$temp_file"
+
+      - name: Run ESLint on changed files
+        run: |
+          temp_file_path="${{ steps.temp-file.outputs.temp-file-path }}"
+          if [ -s "$temp_file_path" ]; then
             echo "Running ESLint on changed files:"
-            echo "$changed_files" | xargs npx eslint
-          else
-            echo "No changed files found. Skipping ESLint check."
-          fi
+            npx eslint --ignore-path .gitignore $(cat "$temp_file_path")
 
-      - name: Check for ESLint errors
-        run: |
-          changed_files="${{ steps.changed-files.outputs.files }}"
-          if [ -n "$changed_files" ]; then
-            npx eslint $changed_files --max-warnings 0 --quiet || exit 1
-            echo "ESLint check passed!"
+            # Check the exit code of the ESLint command
+            if [ $? -ne 0 ]; then
+              echo "ESLint found errors. Aborting push or pull request."
+              exit 1
+            fi
           else
             echo "No changed files found. Skipping ESLint check."
           fi
