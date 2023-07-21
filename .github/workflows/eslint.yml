@@ -25,6 +25,11 @@ jobs:
       - name: Check ESLint results
         run: npx eslint --max-warnings=0 .
 
-      - name: Fail the build on ESLint errors
-        run: echo "ESLint found errors. Aborting push." && exit 1
-        if: ${{ steps.eslint.outcome == 'success' }}
+      - name: Display ESLint errors in terminal
+        run: |
+          if [ -f "eslint_report.txt" ]; then
+            cat eslint_report.txt
+            rm eslint_report.txt
+          else
+            echo "No ESLint errors found."
+          fi
