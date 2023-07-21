@@ -26,6 +26,7 @@ jobs:
         run: npx eslint --max-warnings=0 .
 
       - name: Display ESLint errors in terminal
+        if: ${{ failure() }}
         run: |
           if [ -f "eslint_report.txt" ]; then
             cat eslint_report.txt
