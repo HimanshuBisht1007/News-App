@@ -8,7 +8,6 @@ module.exports = {
     'plugin:import/errors',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
-    'prettier',
   ],
   overrides: [
     {
@@ -25,7 +24,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', 'import', 'jsx-a11y', 'eslint-plugin-no-inline-styles', 'prettier'],
+  plugins: ['react', 'import', 'jsx-a11y', 'eslint-plugin-no-inline-styles'],
   rules: {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
