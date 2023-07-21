@@ -1,36 +1,40 @@
-name: ESLint
+name: ESLint Check
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  lint:
+  eslint-check:
+    name: ESLint Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: '14' # Specify version 14 or any version >= 14
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run ESLint
+      - name: ESLint check
         run: npm run lint
-        continue-on-error: true
 
-      - name: Check ESLint results
-        run: npx eslint --max-warnings=0 .
-
-      - name: Display ESLint errors in terminal
-        if: ${{ failure() }}
+      - name: Check for ESLint errors
         run: |
-          if [ -f "eslint_report.txt" ]; then
-            cat eslint_report.txt
-            rm eslint_report.txt
+          ESLINT_EXIT_CODE=0
+          npx eslint . --max-warnings 0 --quiet || ESLINT_EXIT_CODE=$?
+          if [ $ESLINT_EXIT_CODE -eq 0 ]; then
+            echo "ESLint check passed!"
           else
-            echo "No ESLint errors found."
+            echo "ESLint check failed. Please fix the errors before pushing or merging."
+            exit 1
           fi
