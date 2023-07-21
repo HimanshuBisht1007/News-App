@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import News from "./components/News";
 import Spinner from "./components/Spinner";
 import Skate from "./Skate.gif";
-import { LoaderFunction } from "react-router-dom";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
