@@ -1,0 +1,30 @@
+name: ESLint
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Check ESLint results
+        run: npx eslint --max-warnings=0 .
+
+      - name: Fail the build on ESLint errors
+        run: echo "ESLint found errors. Aborting push." && exit 1
+        if: ${{ steps.eslint.outcome == 'success' }}
