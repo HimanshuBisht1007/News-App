@@ -26,6 +26,7 @@ export default class App extends Component {
   render() {
     console.log('API Key:');
     console.log('process.env.REACT_APP_NEWS_API');
+    console.log('process.env.REACT_APP_NEWS_API');
     return (
       <div style={{ scale: 'none' }}>
         <Router>
