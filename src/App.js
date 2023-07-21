@@ -1,14 +1,15 @@
-import "./App.css";
+import './App.css';
 
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Navbar from "./components/Navbar";
-import News from "./components/News";
-import Spinner from "./components/Spinner";
-import Skate from "./Skate.gif";
+import Navbar from './components/Navbar';
+import News from './components/News';
+import Spinner from './components/Spinner';
+import Skate from './Skate.gif';
+import { LoaderFunction } from 'react-router-dom';
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoadingBar from "react-top-loading-bar";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoadingBar from 'react-top-loading-bar';
 
 export default class App extends Component {
   pageSize = 5;
@@ -23,15 +24,12 @@ export default class App extends Component {
   };
 
   render() {
+    console.log('API Key:');
     return (
-      <div>
+      <div style={{ scale: 'none' }}>
         <Router>
           <Navbar />
-          <LoadingBar
-            height={3}
-            color="#f11946"
-            progress={this.state.progress}
-          />
+          <LoadingBar height={3} color="#f11946" progress={this.state.progress} />
           <Routes>
             <Route
               exact
